@@ -6,24 +6,29 @@
     <meta name="color-scheme" content="light" />
     <meta
       name="description"
-      content="Calculadora estática de FLI, HSI, FIB-4, APRI y NFS a partir de la hoja esteatosis4."
+      content="Calculadora de FLI, HSI, FIB-4, APRI y NFS."
     />
     <title>Calculadora de esteatosis hepática</title>
     <link rel="icon" href="favicon.svg" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <a class="skip" href="#calculadora">Ir a la calculadora</a>
+    <a class="skip" href="#calculadora" data-i18n="skip">Ir a la calculadora</a>
     <header class="top">
       <div class="top-inner">
-        <p class="eyebrow">Esteatosis hepática · hoja esteatosis4</p>
-        <h1>Calculadora de índices</h1>
-        <p class="lede">
-          Calcula FLI, HSI, FIB-4, APRI y NFS con las fórmulas de la hoja.
-          En el modo Informe estático se genera un HTML autónomo, listo para
-          subirlo a GitHub.
+        <div class="top-row">
+          <p class="eyebrow" data-i18n="eyebrow">Esteatosis hepática</p>
+          <div class="lang" role="group" data-i18n-aria="languageLabel" aria-label="Idioma">
+            <button type="button" id="lang-es" aria-pressed="true">Español</button>
+            <button type="button" id="lang-en" aria-pressed="false">English</button>
+          </div>
+        </div>
+        <h1 data-i18n="heading">Calculadora de índices</h1>
+        <p class="lede" data-i18n="lede">
+          Calcula FLI, HSI, FIB-4, APRI y NFS. El informe estático genera un
+          archivo HTML autónomo con los resultados.
         </p>
-        <div class="tabs" role="tablist" aria-label="Modo de la aplicación">
+        <div class="tabs" role="tablist" data-i18n-aria="tabsLabel" aria-label="Modo de la aplicación">
           <button
             type="button"
             class="tab"
@@ -31,6 +36,7 @@
             role="tab"
             aria-controls="panel-results"
             aria-selected="true"
+            data-i18n="tabCalc"
           >
             Calculadora
           </button>
@@ -41,6 +47,7 @@
             role="tab"
             aria-controls="panel-static"
             aria-selected="false"
+            data-i18n="tabStatic"
           >
             Informe estático
           </button>
@@ -50,57 +57,56 @@
 
     <main class="workspace" id="calculadora">
       <form id="calculadora-form" class="panel" autocomplete="off">
-        <h2>Variables</h2>
-        <p id="sample-flag" class="flag">Valores de ejemplo de la hoja</p>
+        <h2 data-i18n="variables">Variables</h2>
+        <p id="sample-flag" class="flag">Valores de ejemplo</p>
 
         <fieldset>
-          <legend>Antropometría</legend>
+          <legend data-i18n="anthropometry">Antropometría</legend>
           <div class="fields">
             <label class="field">
-              <span class="label-text">Edad <span class="unit">años</span></span>
+              <span class="label-text"><span data-i18n="age">Edad</span> <span class="unit" data-i18n="years">años</span></span>
               <input id="edad" type="number" step="any" value="64" data-sample="64" />
             </label>
             <label class="field">
-              <span class="label-text">Sexo</span>
+              <span class="label-text" data-i18n="sex">Sexo</span>
               <select id="sexo" data-sample="0">
-                <option value="0">Hombre (0)</option>
-                <option value="1">Mujer (1)</option>
+                <option value="0" data-i18n="sexMale">Hombre (0)</option>
+                <option value="1" data-i18n="sexFemale">Mujer (1)</option>
               </select>
             </label>
             <label class="field">
-              <span class="label-text">Talla <span class="unit">cm</span></span>
+              <span class="label-text"><span data-i18n="height">Talla</span> <span class="unit">cm</span></span>
               <input id="talla" type="number" step="any" value="183" data-sample="183" />
             </label>
             <label class="field">
-              <span class="label-text">Peso <span class="unit">kg</span></span>
+              <span class="label-text"><span data-i18n="weight">Peso</span> <span class="unit">kg</span></span>
               <input id="peso" type="number" step="any" value="90" data-sample="90" />
             </label>
             <div class="field">
-              <span class="label-text">IMC</span>
+              <span class="label-text" data-i18n="bmiLabel">IMC</span>
               <output id="bmi" class="computed" for="talla peso">—</output>
-              <span class="hint">10.000 × peso / talla²</span>
+              <span class="hint" data-i18n="bmiHint">10.000 × peso / talla²</span>
             </div>
             <label class="field">
-              <span class="label-text">Perímetro abdominal <span class="unit">cm</span></span>
+              <span class="label-text"><span data-i18n="waist">Perímetro abdominal</span> <span class="unit">cm</span></span>
               <input id="perimetro" type="number" step="any" value="95" data-sample="95" />
             </label>
             <label class="field field-wide">
-              <span class="label-text">Diabetes mellitus / GBA</span>
+              <span class="label-text" data-i18n="diabetes">Diabetes mellitus / GBA</span>
               <select id="diabetes" data-sample="0">
-                <option value="0">No (0)</option>
-                <option value="1">Glucemia basal alterada (1)</option>
-                <option value="2">Diabetes mellitus (2)</option>
+                <option value="0" data-i18n="dmNo">No (0)</option>
+                <option value="1" data-i18n="dmIfg">Glucemia basal alterada (1)</option>
+                <option value="2" data-i18n="dmYes">Diabetes mellitus (2)</option>
               </select>
-              <span class="hint hint-alert">
-                HSI suma 2 × este código y NFS suma 1,13 × este código, igual
-                que en la hoja.
+              <span class="hint hint-alert" data-i18n="dmHint">
+                HSI suma 2 × este código y NFS suma 1,13 × este código.
               </span>
             </label>
           </div>
         </fieldset>
 
         <fieldset>
-          <legend>Laboratorio</legend>
+          <legend data-i18n="lab">Laboratorio</legend>
           <div class="fields">
             <label class="field">
               <span class="label-text">AST-GOT <span class="unit">U/L</span></span>
@@ -115,55 +121,54 @@
               <input id="ggt" type="number" step="any" value="30" data-sample="30" />
             </label>
             <label class="field">
-              <span class="label-text">Plaquetas <span class="unit">×10⁹/L</span></span>
+              <span class="label-text"><span data-i18n="platelets">Plaquetas</span> <span class="unit">×10⁹/L</span></span>
               <input id="plaquetas" type="number" step="any" value="252" data-sample="252" />
             </label>
             <label class="field">
-              <span class="label-text">Albúmina</span>
+              <span class="label-text" data-i18n="albumin">Albúmina</span>
               <input id="albumina" type="number" step="any" value="35" data-sample="35" />
-              <span class="hint">El NFS resta 0,66 × este valor. El ejemplo de la hoja es 35.</span>
+              <span class="hint" data-i18n="albuminHint">El NFS resta 0,66 × este valor. El ejemplo es 35.</span>
             </label>
             <label class="field">
-              <span class="label-text">Triglicéridos <span class="unit">mg/dL</span></span>
+              <span class="label-text"><span data-i18n="triglycerides">Triglicéridos</span> <span class="unit">mg/dL</span></span>
               <input id="trigliceridos" type="number" step="any" value="120" data-sample="120" />
             </label>
             <label class="field field-wide">
-              <span class="label-text">ULN de AST <span class="unit">U/L</span></span>
+              <span class="label-text"><span data-i18n="uln">ULN de AST</span> <span class="unit">U/L</span></span>
               <input id="uln" type="number" step="any" value="41" data-sample="41" />
-              <span class="hint">
-                La celda de APRI divide el AST entre 41. La hoja de fórmulas cita
-                35 como ejemplo de límite del laboratorio.
+              <span class="hint" data-i18n="ulnHint">
+                El APRI divide el AST entre 41. El valor 35 es un ejemplo de límite del laboratorio.
               </span>
             </label>
           </div>
         </fieldset>
 
         <div class="form-actions">
-          <button type="button" class="btn" id="btn-reset">Restablecer ejemplo</button>
-          <button type="button" class="btn" id="btn-print">Imprimir</button>
+          <button type="button" class="btn" id="btn-reset" data-i18n="reset">Restablecer ejemplo</button>
+          <button type="button" class="btn" id="btn-print" data-i18n="print">Imprimir</button>
         </div>
       </form>
 
       <div class="stage">
         <section id="panel-results" role="tabpanel" aria-labelledby="tab-calc">
-          <h2>Resultados</h2>
+          <h2 data-i18n="results">Resultados</h2>
           <div id="results"></div>
         </section>
 
         <section id="panel-static" role="tabpanel" aria-labelledby="tab-static" hidden>
-          <h2>Informe estático</h2>
+          <h2 data-i18n="staticTitle">Informe estático</h2>
           <div class="static-lead">
-            <p>
-              Vista previa de un único archivo HTML con estos resultados. Puedes
-              descargarlo y subirlo a GitHub sin servidor ni compilación.
+            <p data-i18n="staticLead">
+              Vista previa de un único archivo HTML con estos resultados. Puedes descargarlo y abrirlo sin conexión.
             </p>
-            <button type="button" class="btn btn-strong" id="btn-download">
+            <button type="button" class="btn btn-strong" id="btn-download" data-i18n="download">
               Descargar HTML
             </button>
           </div>
           <iframe
             id="report-frame"
             class="preview"
+            data-i18n-title="previewTitle"
             title="Vista previa del informe estático"
           ></iframe>
         </section>
@@ -172,62 +177,54 @@
 
     <div class="reference-wrap">
       <details id="reference">
-        <summary>Fórmulas y escala de fibrosis</summary>
+        <summary data-i18n="referenceSummary">Fórmulas y escala de fibrosis</summary>
         <div class="reference">
-          <h3>Niveles de fibrosis (METAVIR)</h3>
+          <h3 data-i18n="metavir">Niveles de fibrosis (METAVIR)</h3>
           <ol class="scale">
-            <li><strong>F0</strong> No fibrosis</li>
-            <li><strong>F1</strong> Fibrosis portal sin septos</li>
-            <li><strong>F2</strong> Fibrosis portal con pocos septos</li>
-            <li><strong>F3</strong> Numerosos septos sin cirrosis</li>
-            <li><strong>F4</strong> Cirrosis</li>
+            <li><strong>F0</strong> <span data-i18n="f0">No fibrosis</span></li>
+            <li><strong>F1</strong> <span data-i18n="f1">Fibrosis portal sin septos</span></li>
+            <li><strong>F2</strong> <span data-i18n="f2">Fibrosis portal con pocos septos</span></li>
+            <li><strong>F3</strong> <span data-i18n="f3">Numerosos septos sin cirrosis</span></li>
+            <li><strong>F4</strong> <span data-i18n="f4">Cirrosis</span></li>
           </ol>
 
           <h3>FLI · Fatty Liver Index</h3>
           <p class="formula">
-            FLI = [e^y / (1 + e^y)] × 100<br />
-            y = 0,953 × ln(triglicéridos) + 0,139 × IMC + 0,718 × ln(GGT) + 0,053 × perímetro abdominal − 15,745
+            <span data-i18n="fliFormula1">FLI = [e^y / (1 + e^y)] × 100</span><br />
+            <span data-i18n="fliFormula2">y = 0,953 × ln(triglicéridos) + 0,139 × IMC + 0,718 × ln(GGT) + 0,053 × perímetro abdominal − 15,745</span>
           </p>
 
           <h3>HSI · Hepatic Steatosis Index</h3>
-          <p class="formula">
+          <p class="formula" data-i18n="hsiFormula">
             HSI = 8 × (ALT / AST) + IMC + 2 × sexo + 2 × código de diabetes/GBA
           </p>
 
           <h3>FIB-4</h3>
-          <p class="formula">FIB-4 = (edad × AST) / (plaquetas × √ALT)</p>
+          <p class="formula" data-i18n="fib4Formula">FIB-4 = (edad × AST) / (plaquetas × √ALT)</p>
 
           <h3>APRI · AST to Platelet Ratio Index</h3>
-          <p class="formula">APRI = (AST / ULN) × 100 / plaquetas</p>
+          <p class="formula" data-i18n="apriFormula">APRI = (AST / ULN) × 100 / plaquetas</p>
 
           <h3>NFS · NAFLD Fibrosis Score</h3>
-          <p class="formula">
+          <p class="formula" data-i18n="nfsFormula">
             NFS = −1,675 + 0,037 × edad + 0,094 × IMC + 1,13 × código de diabetes/GBA + 0,99 × (AST / ALT) − 0,013 × plaquetas − 0,66 × albúmina
           </p>
 
-          <p class="footnote">
-            GBA: glucemia basal alterada. ULN: límite superior de la normalidad
-            de AST del laboratorio. La hoja de fórmulas también describe TyG,
-            TyG-IMC, TyG-CC y LAP; no entran en el cálculo porque la hoja
-            principal no recoge la glucosa en ayunas.
+          <p class="footnote" data-i18n="footnote">
+            GBA: glucemia basal alterada. ULN: límite superior de la normalidad de AST del laboratorio. TyG, TyG-IMC, TyG-CC y LAP no entran en el cálculo porque no se recoge la glucosa en ayunas.
           </p>
         </div>
       </details>
     </div>
 
     <footer>
-      <p>
-        Basada en esteatosis4.xlsx. Los resultados se calculan en este
-        navegador. Para publicarla, sube la carpeta del proyecto a GitHub y
-        activa Pages en la rama principal, carpeta raíz.
-      </p>
-      <p>Herramienta de apoyo. Complementa la valoración clínica.</p>
+      <p data-i18n="footer1">Los resultados se calculan en este navegador.</p>
+      <p data-i18n="footer2">Herramienta de apoyo. Complementa la valoración clínica.</p>
     </footer>
 
     <noscript>
       <p class="noscript">
-        Esta calculadora usa JavaScript en el navegador y sigue siendo un
-        sitio estático, sin servidor.
+        Esta calculadora usa JavaScript en el navegador. This calculator uses JavaScript in the browser.
       </p>
     </noscript>
     <script src="calculator.js"></script>

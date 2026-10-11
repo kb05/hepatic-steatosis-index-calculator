@@ -1,21 +1,226 @@
 "use strict";
 
-const LEVEL_NAME = {
-  low: "Baja",
-  mid: "Intermedia",
-  high: "Alta",
+const I18N = {
+  es: {
+    docTitle: "Calculadora de esteatosis hepática",
+    metaDescription: "Calculadora de FLI, HSI, FIB-4, APRI y NFS.",
+    languageLabel: "Idioma",
+    skip: "Ir a la calculadora",
+    eyebrow: "Esteatosis hepática",
+    heading: "Calculadora de índices",
+    lede: "Calcula FLI, HSI, FIB-4, APRI y NFS. El informe estático genera un archivo HTML autónomo con los resultados.",
+    tabsLabel: "Modo de la aplicación",
+    tabCalc: "Calculadora",
+    tabStatic: "Informe estático",
+    variables: "Variables",
+    sample: "Valores de ejemplo",
+    modified: "Valores modificados",
+    anthropometry: "Antropometría",
+    age: "Edad",
+    years: "años",
+    sex: "Sexo",
+    sexMale: "Hombre (0)",
+    sexFemale: "Mujer (1)",
+    height: "Talla",
+    weight: "Peso",
+    bmiLabel: "IMC",
+    bmiHint: "10.000 × peso / talla²",
+    waist: "Perímetro abdominal",
+    diabetes: "Diabetes mellitus / GBA",
+    dmNo: "No (0)",
+    dmIfg: "Glucemia basal alterada (1)",
+    dmYes: "Diabetes mellitus (2)",
+    dmHint: "HSI suma 2 × este código y NFS suma 1,13 × este código.",
+    lab: "Laboratorio",
+    platelets: "Plaquetas",
+    albumin: "Albúmina",
+    albuminHint: "El NFS resta 0,66 × este valor. El ejemplo es 35.",
+    triglycerides: "Triglicéridos",
+    uln: "ULN de AST",
+    ulnHint: "El APRI divide el AST entre 41. El valor 35 es un ejemplo de límite del laboratorio.",
+    reset: "Restablecer ejemplo",
+    print: "Imprimir",
+    results: "Resultados",
+    staticTitle: "Informe estático",
+    staticLead: "Vista previa de un único archivo HTML con estos resultados. Puedes descargarlo y abrirlo sin conexión.",
+    download: "Descargar HTML",
+    previewTitle: "Vista previa del informe estático",
+    referenceSummary: "Fórmulas y escala de fibrosis",
+    metavir: "Niveles de fibrosis (METAVIR)",
+    f0: "No fibrosis",
+    f1: "Fibrosis portal sin septos",
+    f2: "Fibrosis portal con pocos septos",
+    f3: "Numerosos septos sin cirrosis",
+    f4: "Cirrosis",
+    fliFormula1: "FLI = [e^y / (1 + e^y)] × 100",
+    fliFormula2: "y = 0,953 × ln(triglicéridos) + 0,139 × IMC + 0,718 × ln(GGT) + 0,053 × perímetro abdominal − 15,745",
+    hsiFormula: "HSI = 8 × (ALT / AST) + IMC + 2 × sexo + 2 × código de diabetes/GBA",
+    fib4Formula: "FIB-4 = (edad × AST) / (plaquetas × √ALT)",
+    apriFormula: "APRI = (AST / ULN) × 100 / plaquetas",
+    nfsFormula: "NFS = −1,675 + 0,037 × edad + 0,094 × IMC + 1,13 × código de diabetes/GBA + 0,99 × (AST / ALT) − 0,013 × plaquetas − 0,66 × albúmina",
+    footnote: "GBA: glucemia basal alterada. ULN: límite superior de la normalidad de AST del laboratorio. TyG, TyG-IMC, TyG-CC y LAP no entran en el cálculo porque no se recoge la glucosa en ayunas.",
+    footer1: "Los resultados se calculan en este navegador.",
+    footer2: "Herramienta de apoyo. Complementa la valoración clínica.",
+    levelLow: "Baja",
+    levelMid: "Intermedia",
+    levelHigh: "Alta",
+    noResult: "Sin resultado",
+    uncalculable: "No calculable con estos valores",
+    fliUses: "Triglicéridos, IMC, GGT y perímetro abdominal",
+    fliLow: "Poca probabilidad de esteatosis",
+    fliMid: "Zona intermedia. Valores indeterminados. Requiere otros métodos de evaluación",
+    fliHigh: "Alta probabilidad de esteatosis hepática",
+    fliLowRange: "< 30",
+    fliMidRange: "30–59",
+    fliHighRange: "≥ 60",
+    hsiUses: "AST, ALT, IMC, sexo y diabetes/GBA",
+    hsiLow: "Baja probabilidad de esteatosis hepática",
+    hsiMid: "Zona intermedia. Valores indeterminados. Requiere otros métodos de evaluación",
+    hsiHigh: "Alta probabilidad de esteatosis hepática",
+    hsiLowRange: "< 30",
+    hsiMidRange: "30–36",
+    hsiHighRange: "> 36",
+    fib4Uses: "Edad, plaquetas, AST y ALT",
+    fib4Low: "Bajo riesgo de fibrosis F0-F1",
+    fib4Mid: "Zona intermedia. Probable fibrosis. Requiere otro método de evaluación",
+    fib4High: "Fibrosis significativa F3-F4",
+    fib4LowRange: "< 1,45",
+    fib4MidRange: "1,45–3,25",
+    fib4HighRange: "> 3,25",
+    apriUses: "AST, plaquetas y ULN",
+    apriLow: "Ausencia de fibrosis significativa",
+    apriMid: "Zona intermedia. Probable fibrosis. Requiere otros métodos de evaluación",
+    apriHigh: "Fibrosis significativa",
+    apriLowRange: "< 0,5",
+    apriMidRange: "0,5–1,5",
+    apriHighRange: "> 1,5",
+    nfsUses: "Edad, IMC, diabetes/GBA, AST, ALT, plaquetas y albúmina",
+    nfsLow: "Riesgo bajo de fibrosis F0-F1",
+    nfsMid: "Zona intermedia. Probable fibrosis. Requiere otro método de evaluación",
+    nfsHigh: "Alto riesgo de fibrosis F3-F4",
+    nfsLowRange: "< −1,455",
+    nfsMidRange: "−1,455–0,675",
+    nfsHighRange: "> 0,675",
+    diabetesShort: "Diabetes / GBA",
+    reportEyebrow: "Informe estático",
+    reportTitle: "Esteatosis y fibrosis hepática",
+    reportMeta: "Generado el {date}. Archivo autónomo.",
+    reportFooter: "Herramienta de apoyo. Complementa la valoración clínica.",
+    reportDocTitle: "Informe de esteatosis",
+    fileName: "informe-esteatosis",
+  },
+  en: {
+    docTitle: "Hepatic steatosis calculator",
+    metaDescription: "Calculator for FLI, HSI, FIB-4, APRI and NFS.",
+    languageLabel: "Language",
+    skip: "Skip to the calculator",
+    eyebrow: "Hepatic steatosis",
+    heading: "Index calculator",
+    lede: "Calculates FLI, HSI, FIB-4, APRI and NFS. The static report builds a standalone HTML file with the results.",
+    tabsLabel: "Application mode",
+    tabCalc: "Calculator",
+    tabStatic: "Static report",
+    variables: "Variables",
+    sample: "Sample values",
+    modified: "Modified values",
+    anthropometry: "Anthropometry",
+    age: "Age",
+    years: "years",
+    sex: "Sex",
+    sexMale: "Male (0)",
+    sexFemale: "Female (1)",
+    height: "Height",
+    weight: "Weight",
+    bmiLabel: "BMI",
+    bmiHint: "10,000 × weight / height²",
+    waist: "Waist circumference",
+    diabetes: "Diabetes mellitus / IFG",
+    dmNo: "No (0)",
+    dmIfg: "Impaired fasting glucose (1)",
+    dmYes: "Diabetes mellitus (2)",
+    dmHint: "HSI adds 2 × this code and NFS adds 1.13 × this code.",
+    lab: "Laboratory",
+    platelets: "Platelets",
+    albumin: "Albumin",
+    albuminHint: "NFS subtracts 0.66 × this value. The example is 35.",
+    triglycerides: "Triglycerides",
+    uln: "AST ULN",
+    ulnHint: "APRI divides AST by 41. The value 35 is an example of a laboratory limit.",
+    reset: "Restore example",
+    print: "Print",
+    results: "Results",
+    staticTitle: "Static report",
+    staticLead: "Preview of a single HTML file with these results. You can download it and open it offline.",
+    download: "Download HTML",
+    previewTitle: "Static report preview",
+    referenceSummary: "Formulas and fibrosis scale",
+    metavir: "Fibrosis stages (METAVIR)",
+    f0: "No fibrosis",
+    f1: "Portal fibrosis without septa",
+    f2: "Portal fibrosis with few septa",
+    f3: "Numerous septa without cirrhosis",
+    f4: "Cirrhosis",
+    fliFormula1: "FLI = [e^y / (1 + e^y)] × 100",
+    fliFormula2: "y = 0.953 × ln(triglycerides) + 0.139 × BMI + 0.718 × ln(GGT) + 0.053 × waist circumference − 15.745",
+    hsiFormula: "HSI = 8 × (ALT / AST) + BMI + 2 × sex + 2 × diabetes/IFG code",
+    fib4Formula: "FIB-4 = (age × AST) / (platelets × √ALT)",
+    apriFormula: "APRI = (AST / ULN) × 100 / platelets",
+    nfsFormula: "NFS = −1.675 + 0.037 × age + 0.094 × BMI + 1.13 × diabetes/IFG code + 0.99 × (AST / ALT) − 0.013 × platelets − 0.66 × albumin",
+    footnote: "IFG: impaired fasting glucose. ULN: upper limit of normal for AST at the laboratory. TyG, TyG-BMI, TyG-WC and LAP are not calculated because fasting glucose is not collected.",
+    footer1: "Results are calculated in this browser.",
+    footer2: "Decision-support tool. It complements clinical judgment.",
+    levelLow: "Low",
+    levelMid: "Intermediate",
+    levelHigh: "High",
+    noResult: "No result",
+    uncalculable: "Cannot be calculated with these values",
+    fliUses: "Triglycerides, BMI, GGT and waist circumference",
+    fliLow: "Low probability of steatosis",
+    fliMid: "Intermediate zone. Indeterminate values. Other assessment methods are required",
+    fliHigh: "High probability of hepatic steatosis",
+    fliLowRange: "< 30",
+    fliMidRange: "30–59",
+    fliHighRange: "≥ 60",
+    hsiUses: "AST, ALT, BMI, sex and diabetes/IFG",
+    hsiLow: "Low probability of hepatic steatosis",
+    hsiMid: "Intermediate zone. Indeterminate values. Other assessment methods are required",
+    hsiHigh: "High probability of hepatic steatosis",
+    hsiLowRange: "< 30",
+    hsiMidRange: "30–36",
+    hsiHighRange: "> 36",
+    fib4Uses: "Age, platelets, AST and ALT",
+    fib4Low: "Low risk of fibrosis F0–F1",
+    fib4Mid: "Intermediate zone. Probable fibrosis. Another assessment method is required",
+    fib4High: "Significant fibrosis F3–F4",
+    fib4LowRange: "< 1.45",
+    fib4MidRange: "1.45–3.25",
+    fib4HighRange: "> 3.25",
+    apriUses: "AST, platelets and ULN",
+    apriLow: "No significant fibrosis",
+    apriMid: "Intermediate zone. Probable fibrosis. Other assessment methods are required",
+    apriHigh: "Significant fibrosis",
+    apriLowRange: "< 0.5",
+    apriMidRange: "0.5–1.5",
+    apriHighRange: "> 1.5",
+    nfsUses: "Age, BMI, diabetes/IFG, AST, ALT, platelets and albumin",
+    nfsLow: "Low risk of fibrosis F0–F1",
+    nfsMid: "Intermediate zone. Probable fibrosis. Another assessment method is required",
+    nfsHigh: "High risk of fibrosis F3–F4",
+    nfsLowRange: "< −1.455",
+    nfsMidRange: "−1.455–0.675",
+    nfsHighRange: "> 0.675",
+    diabetesShort: "Diabetes / IFG",
+    reportEyebrow: "Static report",
+    reportTitle: "Hepatic steatosis and fibrosis",
+    reportMeta: "Generated on {date}. Standalone file.",
+    reportFooter: "Decision-support tool. It complements clinical judgment.",
+    reportDocTitle: "Steatosis report",
+    fileName: "steatosis-report",
+  },
 };
 
-const SEX_LABEL = {
-  0: "Hombre (0)",
-  1: "Mujer (1)",
-};
-
-const DM_LABEL = {
-  0: "No (0)",
-  1: "Glucemia basal alterada (1)",
-  2: "Diabetes mellitus (2)",
-};
+const LEVEL_KEY = { low: "levelLow", mid: "levelMid", high: "levelHigh" };
+const LOCALE = { es: "es-ES", en: "en-US" };
 
 const SCORES = [
   {
@@ -23,26 +228,11 @@ const SCORES = [
     name: "FLI",
     full: "Fatty Liver Index",
     digits: 2,
-    uses: "Triglicéridos, IMC, GGT y perímetro abdominal",
+    uses: "fliUses",
     bands: [
-      {
-        level: "low",
-        range: "< 30",
-        text: "Poca probabilidad de esteatosis",
-        match: (v) => v < 30,
-      },
-      {
-        level: "mid",
-        range: "30–59",
-        text: "Zona intermedia. Valores indeterminados. Requiere otros métodos de evaluación",
-        match: (v) => v >= 30 && v < 60,
-      },
-      {
-        level: "high",
-        range: "≥ 60",
-        text: "Alta probabilidad de esteatosis hepática",
-        match: (v) => v >= 60,
-      },
+      { level: "low", range: "fliLowRange", text: "fliLow", match: (v) => v < 30 },
+      { level: "mid", range: "fliMidRange", text: "fliMid", match: (v) => v >= 30 && v < 60 },
+      { level: "high", range: "fliHighRange", text: "fliHigh", match: (v) => v >= 60 },
     ],
     compute(s) {
       if (invalid(s.tg, s.bmi, s.ggt, s.waist) || s.tg <= 0 || s.ggt <= 0) return null;
@@ -64,26 +254,11 @@ const SCORES = [
     name: "HSI",
     full: "Hepatic Steatosis Index",
     digits: 2,
-    uses: "AST, ALT, IMC, sexo y diabetes/GBA",
+    uses: "hsiUses",
     bands: [
-      {
-        level: "low",
-        range: "< 30",
-        text: "Baja probabilidad de esteatosis hepática",
-        match: (v) => v < 30,
-      },
-      {
-        level: "mid",
-        range: "30–36",
-        text: "Zona intermedia. Valores indeterminados. Requiere otros métodos de evaluación",
-        match: (v) => v >= 30 && v <= 36,
-      },
-      {
-        level: "high",
-        range: "> 36",
-        text: "Alta probabilidad de esteatosis hepática",
-        match: (v) => v > 36,
-      },
+      { level: "low", range: "hsiLowRange", text: "hsiLow", match: (v) => v < 30 },
+      { level: "mid", range: "hsiMidRange", text: "hsiMid", match: (v) => v >= 30 && v <= 36 },
+      { level: "high", range: "hsiHighRange", text: "hsiHigh", match: (v) => v > 36 },
     ],
     compute(s) {
       if (invalid(s.alt, s.ast, s.bmi, s.sex, s.dm) || s.ast === 0) return null;
@@ -96,31 +271,14 @@ const SCORES = [
     name: "FIB-4",
     full: "Fibrosis-4",
     digits: 2,
-    uses: "Edad, plaquetas, AST y ALT",
+    uses: "fib4Uses",
     bands: [
-      {
-        level: "low",
-        range: "< 1,45",
-        text: "Bajo riesgo de fibrosis F0-F1",
-        match: (v) => v < 1.45,
-      },
-      {
-        level: "mid",
-        range: "1,45–3,25",
-        text: "Zona intermedia. Probable fibrosis. Requiere otro método de evaluación",
-        match: (v) => v >= 1.45 && v <= 3.25,
-      },
-      {
-        level: "high",
-        range: "> 3,25",
-        text: "Fibrosis significativa F3-F4",
-        match: (v) => v > 3.25,
-      },
+      { level: "low", range: "fib4LowRange", text: "fib4Low", match: (v) => v < 1.45 },
+      { level: "mid", range: "fib4MidRange", text: "fib4Mid", match: (v) => v >= 1.45 && v <= 3.25 },
+      { level: "high", range: "fib4HighRange", text: "fib4High", match: (v) => v > 3.25 },
     ],
     compute(s) {
-      if (invalid(s.age, s.ast, s.alt, s.platelets) || s.alt <= 0 || s.platelets === 0) {
-        return null;
-      }
+      if (invalid(s.age, s.ast, s.alt, s.platelets) || s.alt <= 0 || s.platelets === 0) return null;
       const value = (s.age * s.ast) / (Math.sqrt(s.alt) * s.platelets);
       return Number.isFinite(value) ? value : null;
     },
@@ -130,26 +288,11 @@ const SCORES = [
     name: "APRI",
     full: "AST to Platelet Ratio Index",
     digits: 2,
-    uses: "AST, plaquetas y ULN",
+    uses: "apriUses",
     bands: [
-      {
-        level: "low",
-        range: "< 0,5",
-        text: "Ausencia de fibrosis significativa",
-        match: (v) => v < 0.5,
-      },
-      {
-        level: "mid",
-        range: "0,5–1,5",
-        text: "Zona intermedia. Probable fibrosis. Requiere otros métodos de evaluación",
-        match: (v) => v >= 0.5 && v <= 1.5,
-      },
-      {
-        level: "high",
-        range: "> 1,5",
-        text: "Fibrosis significativa",
-        match: (v) => v > 1.5,
-      },
+      { level: "low", range: "apriLowRange", text: "apriLow", match: (v) => v < 0.5 },
+      { level: "mid", range: "apriMidRange", text: "apriMid", match: (v) => v >= 0.5 && v <= 1.5 },
+      { level: "high", range: "apriHighRange", text: "apriHigh", match: (v) => v > 1.5 },
     ],
     compute(s) {
       if (invalid(s.ast, s.uln, s.platelets) || s.uln === 0 || s.platelets === 0) return null;
@@ -162,31 +305,14 @@ const SCORES = [
     name: "NFS",
     full: "NAFLD Fibrosis Score",
     digits: 3,
-    uses: "Edad, IMC, diabetes/GBA, AST, ALT, plaquetas y albúmina",
+    uses: "nfsUses",
     bands: [
-      {
-        level: "low",
-        range: "< −1,455",
-        text: "Riesgo bajo de fibrosis F0-F1",
-        match: (v) => v < -1.455,
-      },
-      {
-        level: "mid",
-        range: "−1,455–0,675",
-        text: "Zona intermedia. Probable fibrosis. Requiere otro método de evaluación",
-        match: (v) => v >= -1.455 && v <= 0.675,
-      },
-      {
-        level: "high",
-        range: "> 0,675",
-        text: "Alto riesgo de fibrosis F3-F4",
-        match: (v) => v > 0.675,
-      },
+      { level: "low", range: "nfsLowRange", text: "nfsLow", match: (v) => v < -1.455 },
+      { level: "mid", range: "nfsMidRange", text: "nfsMid", match: (v) => v >= -1.455 && v <= 0.675 },
+      { level: "high", range: "nfsHighRange", text: "nfsHigh", match: (v) => v > 0.675 },
     ],
     compute(s) {
-      if (invalid(s.age, s.bmi, s.dm, s.ast, s.alt, s.platelets, s.albumin) || s.alt === 0) {
-        return null;
-      }
+      if (invalid(s.age, s.bmi, s.dm, s.ast, s.alt, s.platelets, s.albumin) || s.alt === 0) return null;
       const value =
         -1.675 +
         0.037 * s.age +
@@ -199,6 +325,12 @@ const SCORES = [
     },
   },
 ];
+
+let lang = "es";
+
+function t(key) {
+  return I18N[lang][key] ?? I18N.es[key] ?? key;
+}
 
 function invalid(...values) {
   return values.some((value) => value === null || !Number.isFinite(value));
@@ -241,7 +373,7 @@ function readState() {
 }
 
 function formatNumber(value, digits) {
-  return value.toLocaleString("es-ES", {
+  return value.toLocaleString(LOCALE[lang], {
     minimumFractionDigits: digits,
     maximumFractionDigits: digits,
     useGrouping: false,
@@ -269,6 +401,19 @@ function activeBand(score, value) {
   return score.bands.find((band) => band.match(value)) ?? null;
 }
 
+function sexLabel(value) {
+  if (value === 0) return t("sexMale");
+  if (value === 1) return t("sexFemale");
+  return "—";
+}
+
+function dmLabel(value) {
+  if (value === 0) return t("dmNo");
+  if (value === 1) return t("dmIfg");
+  if (value === 2) return t("dmYes");
+  return "—";
+}
+
 function cardHtml(score, state) {
   const value = score.compute(state);
   const band = activeBand(score, value);
@@ -276,13 +421,13 @@ function cardHtml(score, state) {
   const shown = value === null ? "—" : formatNumber(value, score.digits);
   const data = value === null ? "" : String(value);
   const badge = band
-    ? `<span class="badge ${band.level}">${esc(LEVEL_NAME[band.level])}</span>`
-    : `<span class="badge empty">Sin resultado</span>`;
-  const reading = band ? esc(band.text) : "No calculable con estos valores";
+    ? `<span class="badge ${band.level}">${esc(t(LEVEL_KEY[band.level]))}</span>`
+    : `<span class="badge empty">${esc(t("noResult"))}</span>`;
+  const reading = band ? esc(t(band.text)) : esc(t("uncalculable"));
   const bands = score.bands
     .map((item) => {
       const on = band === item ? " is-active" : "";
-      return `<li class="band ${item.level}${on}"><span class="range">${esc(item.range)}</span><span>${esc(item.text)}</span></li>`;
+      return `<li class="band ${item.level}${on}"><span class="range">${esc(t(item.range))}</span><span>${esc(t(item.text))}</span></li>`;
     })
     .join("");
 
@@ -297,7 +442,7 @@ function cardHtml(score, state) {
       </header>
       <p class="score-value" id="score-${score.id}" data-value="${esc(data)}">${shown}</p>
       <p class="reading" id="read-${score.id}">${reading}</p>
-      <p class="uses">${esc(score.uses)}</p>
+      <p class="uses">${esc(t(score.uses))}</p>
       <ul class="bands">${bands}</ul>
     </article>`;
 }
@@ -313,31 +458,31 @@ function renderBmi(state) {
 function renderFlag() {
   const flag = field("sample-flag");
   const sample = usingSample();
-  flag.textContent = sample ? "Valores de ejemplo de la hoja" : "Valores modificados";
+  flag.textContent = sample ? t("sample") : t("modified");
   flag.classList.toggle("is-custom", !sample);
 }
 
 function inputRows(state) {
   return [
-    ["Edad", formatFlexible(state.age), "años"],
-    ["Sexo", SEX_LABEL[state.sex] || "—", ""],
-    ["Talla", formatFlexible(state.height), "cm"],
-    ["Peso", formatFlexible(state.weight), "kg"],
-    ["IMC", state.bmi === null ? "—" : formatNumber(state.bmi, 2), ""],
-    ["Perímetro abdominal", formatFlexible(state.waist), "cm"],
-    ["Diabetes / GBA", DM_LABEL[state.dm] || "—", ""],
+    [t("age"), formatFlexible(state.age), t("years")],
+    [t("sex"), sexLabel(state.sex), ""],
+    [t("height"), formatFlexible(state.height), "cm"],
+    [t("weight"), formatFlexible(state.weight), "kg"],
+    [t("bmiLabel"), state.bmi === null ? "—" : formatNumber(state.bmi, 2), ""],
+    [t("waist"), formatFlexible(state.waist), "cm"],
+    [t("diabetesShort"), dmLabel(state.dm), ""],
     ["AST-GOT", formatFlexible(state.ast), "U/L"],
     ["ALT-GPT", formatFlexible(state.alt), "U/L"],
     ["GGT", formatFlexible(state.ggt), "U/L"],
-    ["Plaquetas", formatFlexible(state.platelets), "×10⁹/L"],
-    ["Albúmina", formatFlexible(state.albumin), ""],
-    ["Triglicéridos", formatFlexible(state.tg), "mg/dL"],
-    ["ULN de AST", formatFlexible(state.uln), "U/L"],
+    [t("platelets"), formatFlexible(state.platelets), "×10⁹/L"],
+    [t("albumin"), formatFlexible(state.albumin), ""],
+    [t("triglycerides"), formatFlexible(state.tg), "mg/dL"],
+    [t("uln"), formatFlexible(state.uln), "U/L"],
   ];
 }
 
 function buildReport(state) {
-  const when = new Date().toLocaleString("es-ES", {
+  const when = new Date().toLocaleString(LOCALE[lang], {
     dateStyle: "long",
     timeStyle: "short",
   });
@@ -350,11 +495,11 @@ function buildReport(state) {
     const value = score.compute(state);
     const band = activeBand(score, value);
     const shown = value === null ? "—" : formatNumber(value, score.digits);
-    const reading = band ? band.text : "No calculable con estos valores";
+    const reading = band ? t(band.text) : t("uncalculable");
     const bands = score.bands
       .map((item) => {
         const mark = band === item ? " active" : "";
-        return `<li class="${item.level}${mark}"><strong>${esc(item.range)}</strong> ${esc(item.text)}</li>`;
+        return `<li class="${item.level}${mark}"><strong>${esc(t(item.range))}</strong> ${esc(t(item.text))}</li>`;
       })
       .join("");
     return `
@@ -364,17 +509,17 @@ function buildReport(state) {
           <p class="value">${esc(shown)}</p>
         </header>
         <p class="reading">${esc(reading)}</p>
-        <p class="uses">${esc(score.uses)}</p>
+        <p class="uses">${esc(t(score.uses))}</p>
         <ul>${bands}</ul>
       </section>`;
   }).join("");
 
   return `<!DOCTYPE html>
-<html lang="es">
+<html lang="${lang}">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Informe de esteatosis</title>
+  <title>${esc(t("reportDocTitle"))}</title>
   <style>
     :root { color-scheme: light; }
     body { margin: 0; background: #f4efe6; color: #1c1915; font-family: "Segoe UI", "Liberation Sans", sans-serif; }
@@ -406,15 +551,15 @@ function buildReport(state) {
 </head>
 <body>
   <main>
-    <p class="eyebrow">Informe estático · esteatosis4</p>
-    <h1>Esteatosis y fibrosis hepática</h1>
-    <p class="meta">Generado el ${esc(when)}. Archivo autónomo, sin servidor.</p>
-    <h3>Variables</h3>
+    <p class="eyebrow">${esc(t("reportEyebrow"))}</p>
+    <h1>${esc(t("reportTitle"))}</h1>
+    <p class="meta">${esc(t("reportMeta").replace("{date}", when))}</p>
+    <h3>${esc(t("variables"))}</h3>
     <table>${rows}</table>
-    <h3>Resultados</h3>
+    <h3>${esc(t("results"))}</h3>
     ${cards}
     <footer>
-      <p>Calculado con las fórmulas de la hoja esteatosis4. Herramienta de apoyo. Complementa la valoración clínica.</p>
+      <p>${esc(t("reportFooter"))}</p>
     </footer>
   </main>
 </body>
@@ -428,6 +573,43 @@ function refresh() {
   renderResults(state);
   if (!field("panel-static").hidden) {
     field("report-frame").srcdoc = buildReport(state);
+  }
+}
+
+function applyLanguage() {
+  document.documentElement.lang = lang;
+  document.title = t("docTitle");
+  const meta = document.querySelector('meta[name="description"]');
+  if (meta) meta.setAttribute("content", t("metaDescription"));
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    el.textContent = t(el.dataset.i18n);
+  });
+  document.querySelectorAll("[data-i18n-aria]").forEach((el) => {
+    el.setAttribute("aria-label", t(el.dataset.i18nAria));
+  });
+  document.querySelectorAll("[data-i18n-title]").forEach((el) => {
+    el.title = t(el.dataset.i18nTitle);
+  });
+  field("lang-es").setAttribute("aria-pressed", String(lang === "es"));
+  field("lang-en").setAttribute("aria-pressed", String(lang === "en"));
+  refresh();
+}
+
+function setLanguage(next) {
+  lang = next === "en" ? "en" : "es";
+  try {
+    localStorage.setItem("esteatosis-lang", lang);
+  } catch {
+    /* Storage can be unavailable; the choice still applies to this page. */
+  }
+  applyLanguage();
+}
+
+function storedLanguage() {
+  try {
+    return localStorage.getItem("esteatosis-lang");
+  } catch {
+    return null;
   }
 }
 
@@ -447,7 +629,7 @@ function downloadReport() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = `informe-esteatosis-${new Date().toISOString().slice(0, 10)}.html`;
+  link.download = `${t("fileName")}-${new Date().toISOString().slice(0, 10)}.html`;
   document.body.appendChild(link);
   link.click();
   link.remove();
@@ -471,4 +653,6 @@ field("btn-print").addEventListener("click", () => {
 field("btn-download").addEventListener("click", downloadReport);
 field("tab-calc").addEventListener("click", () => setMode("calc"));
 field("tab-static").addEventListener("click", () => setMode("static"));
-refresh();
+field("lang-es").addEventListener("click", () => setLanguage("es"));
+field("lang-en").addEventListener("click", () => setLanguage("en"));
+setLanguage(storedLanguage() === "en" ? "en" : "es");
