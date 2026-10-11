@@ -19,17 +19,17 @@ const I18N = {
     age: "Edad",
     years: "años",
     sex: "Sexo",
-    sexMale: "Hombre (0)",
-    sexFemale: "Mujer (1)",
+    sexMale: "Hombre",
+    sexFemale: "Mujer",
     height: "Talla",
     weight: "Peso",
     bmiLabel: "IMC",
     bmiHint: "10.000 × peso / talla²",
     waist: "Perímetro abdominal",
     diabetes: "Diabetes mellitus / GBA",
-    dmNo: "No (0)",
-    dmIfg: "Glucemia basal alterada (1)",
-    dmYes: "Diabetes mellitus (2)",
+    dmNo: "No",
+    dmIfg: "Glucemia basal alterada",
+    dmYes: "Diabetes mellitus",
     dmHint: "HSI suma 2 × este código y NFS suma 1,13 × este código.",
     lab: "Laboratorio",
     platelets: "Plaquetas",
@@ -125,17 +125,17 @@ const I18N = {
     age: "Age",
     years: "years",
     sex: "Sex",
-    sexMale: "Male (0)",
-    sexFemale: "Female (1)",
+    sexMale: "Male",
+    sexFemale: "Female",
     height: "Height",
     weight: "Weight",
     bmiLabel: "BMI",
     bmiHint: "10,000 × weight / height²",
     waist: "Waist circumference",
     diabetes: "Diabetes mellitus / IFG",
-    dmNo: "No (0)",
-    dmIfg: "Impaired fasting glucose (1)",
-    dmYes: "Diabetes mellitus (2)",
+    dmNo: "No",
+    dmIfg: "Impaired fasting glucose",
+    dmYes: "Diabetes mellitus",
     dmHint: "HSI adds 2 × this code and NFS adds 1.13 × this code.",
     lab: "Laboratory",
     platelets: "Platelets",
@@ -337,10 +337,13 @@ function field(id) {
 }
 
 function readNumber(id) {
-  const raw = field(id).value.trim();
+  const el = field(id);
+  const raw = el.value.trim();
   if (raw === "") return null;
   const value = Number(raw);
-  return Number.isFinite(value) ? value : null;
+  if (!Number.isFinite(value)) return null;
+  if (el.min === "0" && value < 0) return null;
+  return value;
 }
 
 function readState() {
@@ -660,7 +663,13 @@ function resetSample() {
 }
 
 field("calculadora-form").addEventListener("submit", (event) => event.preventDefault());
-field("calculadora-form").addEventListener("input", refresh);
+field("calculadora-form").addEventListener("input", (event) => {
+  const input = event.target;
+  if (input instanceof HTMLInputElement && input.min === "0" && input.value.includes("-")) {
+    input.value = input.value.replace(/-/g, "");
+  }
+  refresh();
+});
 field("btn-reset").addEventListener("click", resetSample);
 document.querySelectorAll("[data-print-report]").forEach((button) => {
   button.addEventListener("click", printReport);

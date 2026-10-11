@@ -65,22 +65,22 @@
           <div class="fields">
             <label class="field">
               <span class="label-text"><span data-i18n="age">Edad</span> <span class="unit" data-i18n="years">años</span></span>
-              <input id="edad" type="number" step="any" value="64" data-sample="64" />
+              <input id="edad" type="number" min="0" step="any" value="64" data-sample="64" />
             </label>
             <label class="field">
               <span class="label-text" data-i18n="sex">Sexo</span>
               <select id="sexo" data-sample="0">
-                <option value="0" data-i18n="sexMale">Hombre (0)</option>
-                <option value="1" data-i18n="sexFemale">Mujer (1)</option>
+                <option value="0" data-i18n="sexMale">Hombre</option>
+                <option value="1" data-i18n="sexFemale">Mujer</option>
               </select>
             </label>
             <label class="field">
               <span class="label-text"><span data-i18n="height">Talla</span> <span class="unit">cm</span></span>
-              <input id="talla" type="number" step="any" value="183" data-sample="183" />
+              <input id="talla" type="number" min="0" step="any" value="183" data-sample="183" />
             </label>
             <label class="field">
               <span class="label-text"><span data-i18n="weight">Peso</span> <span class="unit">kg</span></span>
-              <input id="peso" type="number" step="any" value="90" data-sample="90" />
+              <input id="peso" type="number" min="0" step="any" value="90" data-sample="90" />
             </label>
             <div class="field">
               <span class="label-text" data-i18n="bmiLabel">IMC</span>
@@ -89,14 +89,14 @@
             </div>
             <label class="field">
               <span class="label-text"><span data-i18n="waist">Perímetro abdominal</span> <span class="unit">cm</span></span>
-              <input id="perimetro" type="number" step="any" value="95" data-sample="95" />
+              <input id="perimetro" type="number" min="0" step="any" value="95" data-sample="95" />
             </label>
             <label class="field field-wide">
               <span class="label-text" data-i18n="diabetes">Diabetes mellitus / GBA</span>
               <select id="diabetes" data-sample="0">
-                <option value="0" data-i18n="dmNo">No (0)</option>
-                <option value="1" data-i18n="dmIfg">Glucemia basal alterada (1)</option>
-                <option value="2" data-i18n="dmYes">Diabetes mellitus (2)</option>
+                <option value="0" data-i18n="dmNo">No</option>
+                <option value="1" data-i18n="dmIfg">Glucemia basal alterada</option>
+                <option value="2" data-i18n="dmYes">Diabetes mellitus</option>
               </select>
               <span class="hint hint-alert" data-i18n="dmHint">
                 HSI suma 2 × este código y NFS suma 1,13 × este código.
@@ -110,32 +110,32 @@
           <div class="fields">
             <label class="field">
               <span class="label-text">AST-GOT <span class="unit">U/L</span></span>
-              <input id="ast" type="number" step="any" value="30" data-sample="30" />
+              <input id="ast" type="number" min="0" step="any" value="30" data-sample="30" />
             </label>
             <label class="field">
               <span class="label-text">ALT-GPT <span class="unit">U/L</span></span>
-              <input id="alt" type="number" step="any" value="30" data-sample="30" />
+              <input id="alt" type="number" min="0" step="any" value="30" data-sample="30" />
             </label>
             <label class="field">
               <span class="label-text">GGT <span class="unit">U/L</span></span>
-              <input id="ggt" type="number" step="any" value="30" data-sample="30" />
+              <input id="ggt" type="number" min="0" step="any" value="30" data-sample="30" />
             </label>
             <label class="field">
               <span class="label-text"><span data-i18n="platelets">Plaquetas</span> <span class="unit">×10⁹/L</span></span>
-              <input id="plaquetas" type="number" step="any" value="252" data-sample="252" />
+              <input id="plaquetas" type="number" min="0" step="any" value="252" data-sample="252" />
             </label>
             <label class="field">
               <span class="label-text" data-i18n="albumin">Albúmina</span>
-              <input id="albumina" type="number" step="any" value="35" data-sample="35" />
+              <input id="albumina" type="number" min="0" step="any" value="35" data-sample="35" />
               <span class="hint" data-i18n="albuminHint">El NFS resta 0,66 × este valor. El ejemplo es 35.</span>
             </label>
             <label class="field">
               <span class="label-text"><span data-i18n="triglycerides">Triglicéridos</span> <span class="unit">mg/dL</span></span>
-              <input id="trigliceridos" type="number" step="any" value="120" data-sample="120" />
+              <input id="trigliceridos" type="number" min="0" step="any" value="120" data-sample="120" />
             </label>
             <label class="field field-wide">
               <span class="label-text"><span data-i18n="uln">ULN de AST</span> <span class="unit">U/L</span></span>
-              <input id="uln" type="number" step="any" value="41" data-sample="41" />
+              <input id="uln" type="number" min="0" step="any" value="41" data-sample="41" />
               <span class="hint" data-i18n="ulnHint">
                 El APRI divide el AST entre 41. El valor 35 es un ejemplo de límite del laboratorio.
               </span>
