@@ -513,31 +513,149 @@ footer p {
   }
 }
 
+#print-root {
+  display: none;
+}
+
 @media print {
-  body,
-  .top {
-    background: white;
-    color: black;
+  @page {
+    size: A4;
+    margin: 14mm;
   }
 
-  .lede,
-  .eyebrow,
-  h1 {
-    color: black;
-  }
-
-  .tabs,
-  .lang,
-  .form-actions,
-  .skip,
-  .static-lead .btn {
+  body > *:not(#print-root) {
     display: none !important;
   }
 
-  .card,
-  .panel,
-  details {
-    box-shadow: none;
+  #print-root {
+    display: block !important;
+    background: white;
+    color: #1c1915;
+  }
+
+  #print-root main {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  #print-root h1,
+  #print-root h2,
+  #print-root h3 {
+    font-family: Georgia, "Liberation Serif", serif;
+    color: #1c1915;
+  }
+
+  #print-root h1 {
+    font-size: 1.7rem;
+    margin: 0.15rem 0 0.4rem;
+  }
+
+  #print-root .eyebrow,
+  #print-root .meta,
+  #print-root .uses,
+  #print-root footer {
+    color: #5e564c;
+  }
+
+  #print-root .eyebrow {
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    margin: 0;
+  }
+
+  #print-root table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  #print-root th,
+  #print-root td {
+    text-align: left;
+    padding: 0.28rem 0.4rem;
+    border-bottom: 1px solid #ddd4c6;
+    vertical-align: top;
+  }
+
+  #print-root th {
+    width: 46%;
+  }
+
+  #print-root .score {
+    margin: 0.7rem 0;
+    padding-left: 0.7rem;
+    border-left: 4px solid #d9d0c2;
     break-inside: avoid;
+  }
+
+  #print-root .score.low { border-left-color: #1d6b4f; }
+  #print-root .score.mid { border-left-color: #c48a12; }
+  #print-root .score.high { border-left-color: #9f2d2d; }
+
+  #print-root .score header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: baseline;
+  }
+
+  #print-root h2 {
+    font-size: 1.15rem;
+    margin: 0;
+  }
+
+  #print-root h2 small {
+    display: block;
+    font-family: "Segoe UI", "Liberation Sans", sans-serif;
+    font-size: 0.75rem;
+    color: #5e564c;
+    font-weight: 500;
+  }
+
+  #print-root .value {
+    margin: 0;
+    font-family: Georgia, "Liberation Serif", serif;
+    font-size: 1.6rem;
+  }
+
+  #print-root .reading {
+    font-weight: 700;
+    margin: 0.25rem 0 0.1rem;
+  }
+
+  #print-root .uses {
+    margin: 0 0 0.3rem;
+    font-size: 0.85rem;
+  }
+
+  #print-root ul {
+    margin: 0;
+    padding-left: 1.1rem;
+  }
+
+  #print-root li {
+    margin: 0.12rem 0;
+    color: #5e564c;
+  }
+
+  #print-root li.active {
+    color: #1c1915;
+    font-weight: 650;
+  }
+
+  #print-root h3 {
+    margin: 1rem 0 0.35rem;
+    break-after: avoid;
+  }
+
+  #print-root table,
+  #print-root h3 {
+    break-inside: avoid;
+  }
+
+  #print-root footer {
+    font-size: 0.85rem;
+    margin-top: 1rem;
   }
 }

@@ -8,7 +8,7 @@ const I18N = {
     skip: "Ir a la calculadora",
     eyebrow: "Esteatosis hepática",
     heading: "Calculadora de índices",
-    lede: "Calcula FLI, HSI, FIB-4, APRI y NFS. El informe estático genera un archivo HTML autónomo con los resultados.",
+    lede: "Calcula FLI, HSI, FIB-4, APRI y NFS. Imprimir informe abre el informe para imprimirlo o guardarlo como PDF.",
     tabsLabel: "Modo de la aplicación",
     tabCalc: "Calculadora",
     tabStatic: "Informe estático",
@@ -39,11 +39,10 @@ const I18N = {
     uln: "ULN de AST",
     ulnHint: "El APRI divide el AST entre 41. El valor 35 es un ejemplo de límite del laboratorio.",
     reset: "Restablecer ejemplo",
-    print: "Imprimir",
+    printReport: "Imprimir informe",
     results: "Resultados",
     staticTitle: "Informe estático",
-    staticLead: "Vista previa de un único archivo HTML con estos resultados. Puedes descargarlo y abrirlo sin conexión.",
-    download: "Descargar HTML",
+    staticLead: "Vista previa del informe. Imprimir informe abre la impresión para guardarlo como PDF.",
     previewTitle: "Vista previa del informe estático",
     referenceSummary: "Fórmulas y escala de fibrosis",
     metavir: "Niveles de fibrosis (METAVIR)",
@@ -107,7 +106,6 @@ const I18N = {
     reportMeta: "Generado el {date}. Archivo autónomo.",
     reportFooter: "Herramienta de apoyo. Complementa la valoración clínica.",
     reportDocTitle: "Informe de esteatosis",
-    fileName: "informe-esteatosis",
   },
   en: {
     docTitle: "Hepatic steatosis calculator",
@@ -116,7 +114,7 @@ const I18N = {
     skip: "Skip to the calculator",
     eyebrow: "Hepatic steatosis",
     heading: "Index calculator",
-    lede: "Calculates FLI, HSI, FIB-4, APRI and NFS. The static report builds a standalone HTML file with the results.",
+    lede: "Calculates FLI, HSI, FIB-4, APRI and NFS. Print report opens the report so you can print it or save it as a PDF.",
     tabsLabel: "Application mode",
     tabCalc: "Calculator",
     tabStatic: "Static report",
@@ -147,11 +145,10 @@ const I18N = {
     uln: "AST ULN",
     ulnHint: "APRI divides AST by 41. The value 35 is an example of a laboratory limit.",
     reset: "Restore example",
-    print: "Print",
+    printReport: "Print report",
     results: "Results",
     staticTitle: "Static report",
-    staticLead: "Preview of a single HTML file with these results. You can download it and open it offline.",
-    download: "Download HTML",
+    staticLead: "Preview of the report. Print report opens printing so you can save it as a PDF.",
     previewTitle: "Static report preview",
     referenceSummary: "Formulas and fibrosis scale",
     metavir: "Fibrosis stages (METAVIR)",
@@ -215,7 +212,6 @@ const I18N = {
     reportMeta: "Generated on {date}. Standalone file.",
     reportFooter: "Decision-support tool. It complements clinical judgment.",
     reportDocTitle: "Steatosis report",
-    fileName: "steatosis-report",
   },
 };
 
@@ -481,17 +477,16 @@ function inputRows(state) {
   ];
 }
 
-function buildReport(state) {
-  const when = new Date().toLocaleString(LOCALE[lang], {
-    dateStyle: "long",
-    timeStyle: "short",
-  });
-  const rows = inputRows(state)
+function tableRows(state) {
+  return inputRows(state)
     .map(([label, value, unit]) => {
       return `<tr><th>${esc(label)}</th><td>${esc(value)}${unit ? ` <span>${esc(unit)}</span>` : ""}</td></tr>`;
     })
     .join("");
-  const cards = SCORES.map((score) => {
+}
+
+function reportCards(state) {
+  return SCORES.map((score) => {
     const value = score.compute(state);
     const band = activeBand(score, value);
     const shown = value === null ? "—" : formatNumber(value, score.digits);
@@ -513,7 +508,32 @@ function buildReport(state) {
         <ul>${bands}</ul>
       </section>`;
   }).join("");
+}
 
+function buildReport(state) {
+  const when = new Date().toLocaleString(LOCALE[lang], {
+    dateStyle: "long",
+    timeStyle: "short",
+  });
+  return reportDocument(reportBody(when, tableRows(state), reportCards(state)));
+}
+
+function reportBody(when, rows, cards) {
+  return `<main>
+    <p class="eyebrow">${esc(t("reportEyebrow"))}</p>
+    <h1>${esc(t("reportTitle"))}</h1>
+    <p class="meta">${esc(t("reportMeta").replace("{date}", when))}</p>
+    <h3>${esc(t("variables"))}</h3>
+    <table>${rows}</table>
+    <h3>${esc(t("results"))}</h3>
+    ${cards}
+    <footer>
+      <p>${esc(t("reportFooter"))}</p>
+    </footer>
+  </main>`;
+}
+
+function reportDocument(body) {
   return `<!DOCTYPE html>
 <html lang="${lang}">
 <head>
@@ -546,22 +566,16 @@ function buildReport(state) {
     li.active { color: #1c1915; font-weight: 650; }
     h3 { font-family: Georgia, serif; margin: 1.4rem 0 0.5rem; }
     footer { font-size: 0.88rem; }
-    @media print { body { background: white; } }
+    @page { size: A4; margin: 14mm; }
+    @media print {
+      body { background: white; }
+      main { max-width: none; padding: 0; }
+      table, .score, h3 { break-inside: avoid; }
+    }
   </style>
 </head>
 <body>
-  <main>
-    <p class="eyebrow">${esc(t("reportEyebrow"))}</p>
-    <h1>${esc(t("reportTitle"))}</h1>
-    <p class="meta">${esc(t("reportMeta").replace("{date}", when))}</p>
-    <h3>${esc(t("variables"))}</h3>
-    <table>${rows}</table>
-    <h3>${esc(t("results"))}</h3>
-    ${cards}
-    <footer>
-      <p>${esc(t("reportFooter"))}</p>
-    </footer>
-  </main>
+  ${body}
 </body>
 </html>`;
 }
@@ -624,16 +638,18 @@ function setMode(mode) {
   }
 }
 
-function downloadReport() {
-  const blob = new Blob([buildReport(readState())], { type: "text/html;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `${t("fileName")}-${new Date().toISOString().slice(0, 10)}.html`;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  URL.revokeObjectURL(url);
+function preparePrint() {
+  const state = readState();
+  const when = new Date().toLocaleString(LOCALE[lang], {
+    dateStyle: "long",
+    timeStyle: "short",
+  });
+  field("print-root").innerHTML = reportBody(when, tableRows(state), reportCards(state));
+}
+
+function printReport() {
+  preparePrint();
+  window.print();
 }
 
 function resetSample() {
@@ -646,11 +662,10 @@ function resetSample() {
 field("calculadora-form").addEventListener("submit", (event) => event.preventDefault());
 field("calculadora-form").addEventListener("input", refresh);
 field("btn-reset").addEventListener("click", resetSample);
-field("btn-print").addEventListener("click", () => {
-  if (field("panel-static").hidden) window.print();
-  else field("report-frame").contentWindow.print();
+document.querySelectorAll("[data-print-report]").forEach((button) => {
+  button.addEventListener("click", printReport);
 });
-field("btn-download").addEventListener("click", downloadReport);
+window.addEventListener("beforeprint", preparePrint);
 field("tab-calc").addEventListener("click", () => setMode("calc"));
 field("tab-static").addEventListener("click", () => setMode("static"));
 field("lang-es").addEventListener("click", () => setLanguage("es"));

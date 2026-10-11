@@ -25,8 +25,8 @@
         </div>
         <h1 data-i18n="heading">Calculadora de índices</h1>
         <p class="lede" data-i18n="lede">
-          Calcula FLI, HSI, FIB-4, APRI y NFS. El informe estático genera un
-          archivo HTML autónomo con los resultados.
+          Calcula FLI, HSI, FIB-4, APRI y NFS. Imprimir informe abre el informe
+          para imprimirlo o guardarlo como PDF.
         </p>
         <div class="tabs" role="tablist" data-i18n-aria="tabsLabel" aria-label="Modo de la aplicación">
           <button
@@ -145,7 +145,7 @@
 
         <div class="form-actions">
           <button type="button" class="btn" id="btn-reset" data-i18n="reset">Restablecer ejemplo</button>
-          <button type="button" class="btn" id="btn-print" data-i18n="print">Imprimir</button>
+          <button type="button" class="btn btn-strong" data-print-report data-i18n="printReport">Imprimir informe</button>
         </div>
       </form>
 
@@ -159,10 +159,10 @@
           <h2 data-i18n="staticTitle">Informe estático</h2>
           <div class="static-lead">
             <p data-i18n="staticLead">
-              Vista previa de un único archivo HTML con estos resultados. Puedes descargarlo y abrirlo sin conexión.
+              Vista previa del informe. Imprimir informe abre la impresión para guardarlo como PDF.
             </p>
-            <button type="button" class="btn btn-strong" id="btn-download" data-i18n="download">
-              Descargar HTML
+            <button type="button" class="btn btn-strong" data-print-report data-i18n="printReport">
+              Imprimir informe
             </button>
           </div>
           <iframe
@@ -227,6 +227,7 @@
         Esta calculadora usa JavaScript en el navegador. This calculator uses JavaScript in the browser.
       </p>
     </noscript>
+    <div id="print-root"></div>
     <script src="calculator.js"></script>
   </body>
 </html>
